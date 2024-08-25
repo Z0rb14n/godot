@@ -75,5 +75,11 @@ int RandomPCG::random(int p_from, int p_to) {
 	if (p_from == p_to) {
 		return p_from;
 	}
-	return rand(abs(p_from - p_to) + 1) + MIN(p_from, p_to);
+	int min = MIN(p_from, p_to);
+	// needed to prevent overflow in abs(p_from - p_to) + 1
+	if (p_from < 0 && p_to >= RAND_MAX + p_from) {
+		return rand() + min;
+	} else {
+		return rand(abs(p_from - p_to) + 1) + min;
+	}
 }
